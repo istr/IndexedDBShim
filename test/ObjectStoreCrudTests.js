@@ -195,6 +195,27 @@ onObjectStoreOpen("Getting data in Object Store", DB.OBJECT_STORE_1, function(ob
         nextTest();
     };
 });
+onObjectStoreOpen("Getting non-existent data in Object Store", DB.OBJECT_STORE_1, function(objectStore){
+    var req = objectStore.get('UNKNOWN');
+		var callCount = 0;
+		var callCount = 0;
+    req.onsuccess = function(){
+        _("Data got from object store");
+				equal(1, ++callCount, "Exactly one callback call on open");
+        deepEqual(req.result, undefined, "Data fetched is UNDEFINED");
+        start();
+        objectStore.transaction.db.close();
+        nextTest();
+    };
+    req.onerror = function(){
+        _("Could not get data to database");
+				equal(1, ++callCount, "Exactly one callback call on open");
+        ok(false, "Could not get data");
+        start();
+        nextTest();
+    };
+});
+
 onObjectStoreOpen("Count in Object Store", DB.OBJECT_STORE_1, function(objectStore){
     var req = objectStore.count();
 		var callCount = 0;
